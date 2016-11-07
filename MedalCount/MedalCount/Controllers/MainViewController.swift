@@ -30,6 +30,8 @@ final class MainViewController: UIViewController {
   @IBOutlet weak var medalCountButton: UIButton!
   @IBOutlet weak var logoImageView: UIImageView!
 
+  lazy var slideInTransitioningDelegate = SlideInPresentationManager()
+
   // MARK: - Properties
   private let dataStore = GamesDataStore()
   fileprivate var presentedGames: Games? {
@@ -46,16 +48,48 @@ final class MainViewController: UIViewController {
   }
 
   // MARK: - Navigation
+//  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//    if let controller = segue.destination as? GamesTableViewController {
+//      if segue.identifier == "SummerSegue" {
+//        controller.gamesArray = dataStore.summer
+//      } else if segue.identifier == "WinterSegue" {
+//        controller.gamesArray = dataStore.winter
+//      }
+//      controller.delegate = self
+//    } else if let controller = segue.destination as? MedalCountViewController {
+//      controller.medalCount = presentedGames?.medalCount
+//    }
+//  }
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let controller = segue.destination as? GamesTableViewController {
       if segue.identifier == "SummerSegue" {
         controller.gamesArray = dataStore.summer
+        
+        //1
+        slideInTransitioningDelegate.direction = .left
+        
       } else if segue.identifier == "WinterSegue" {
         controller.gamesArray = dataStore.winter
+        
+        //2
+        slideInTransitioningDelegate.direction = .right
       }
       controller.delegate = self
+      
+      //3
+      controller.transitioningDelegate = slideInTransitioningDelegate
+      
+      //4
+      controller.modalPresentationStyle = .custom
+      
     } else if let controller = segue.destination as? MedalCountViewController {
       controller.medalCount = presentedGames?.medalCount
+      
+      //5
+      slideInTransitioningDelegate.direction = .bottom
+      controller.transitioningDelegate = slideInTransitioningDelegate
+      controller.modalPresentationStyle = .custom
     }
   }
 }
