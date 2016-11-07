@@ -63,6 +63,9 @@ final class MainViewController: UIViewController {
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let controller = segue.destination as? GamesTableViewController {
+      
+      slideInTransitioningDelegate.disableCompactHeight = false
+      
       if segue.identifier == "SummerSegue" {
         controller.gamesArray = dataStore.summer
         
@@ -84,6 +87,10 @@ final class MainViewController: UIViewController {
       controller.modalPresentationStyle = .custom
       
     } else if let controller = segue.destination as? MedalCountViewController {
+      
+      slideInTransitioningDelegate.disableCompactHeight = true
+
+      
       controller.medalCount = presentedGames?.medalCount
       
       //5
